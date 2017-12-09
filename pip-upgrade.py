@@ -19,6 +19,7 @@ def convert_to_bool(argument):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--show-upgradeable', action='store_true', default=False)
+    parser.add_argument('--yes', '-y', action='store_true', default=False)
     parser.add_argument('--filter', nargs='+')
     return parser.parse_args()
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
             print('WARNING: Your filter didn\'t removed any packages from upgrading. You might wanna check that before upgrading.')
         else:
             print(f'The following packages won\'t be installed: {", ".join(excluded)}' if len(excluded) > 1 else f'The package {excluded[0]} won\'t be upgraded.')
-    if convert_to_bool(input('Do you want to continue? [y/n]: ')):
+    if main_opts.yes or convert_to_bool(input('Do you want to continue? [y/n]: ')):
         print('\n')
         pip.main(['install', '--upgrade'] + [p.project_name for p in distributions])
     else:
